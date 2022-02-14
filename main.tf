@@ -1,15 +1,9 @@
-/***********************************
-Data blocks
-************************************/
-data "azurerm_subnet" "k8s_subnet" {
-  name                 = var.aks_subnet_name
-  virtual_network_name = var.aks_vnet_name
-  resource_group_name  = var.network_resource_group
+resource "azurerm_resource_group" "new_rg" {
+  name     = var.resource_group
+  location = var.region
 }
 
-/***********************************
-Create K8S Cluster
-************************************/
+
 resource "azurerm_kubernetes_cluster" "k8s" {
   timeouts {
     read   = "60m"
@@ -18,7 +12,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
   name                            = var.aks_cluster_name
   location                        = var.region
-  resource_group_name             = var.resource_group
+  resource_group_name             = azurerm_resource_group.new_rg.name
   kubernetes_version              = var.aks_version
   dns_prefix                      = var.dns_prefix
   local_account_disabled          = var.local_account_disabled
@@ -45,8 +39,11 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 
   network_profile {
-    network_plugin = var.network_plugin
-    network_policy = var.network_policy
+    network_plugin     = var.network_plugin
+    network_policy     = var.network_policy
+    service_cidr       = var.service_cidr
+    docker_bridge_cidr = var.docker_bridge_cidr
+    dns_service_ip     = var.dns_service_ip
   }
 
   default_node_pool {
@@ -59,6 +56,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     max_count           = var.cluster_auto_scaling_max_nodes
     os_disk_size_gb     = var.cluster_node_vm_disk_size
     vnet_subnet_id      = data.azurerm_subnet.k8s_subnet.id
+    max_pods            = var.max_pods
   }
 
   identity {
@@ -87,9 +85,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 }
 
-/***********************************
-Create Managed Identities
-# ************************************/
 resource "azurerm_user_assigned_identity" "managed_identity" {
   count               = length(var.managed_identities)
   resource_group_name = azurerm_kubernetes_cluster.k8s.node_resource_group

@@ -1,7 +1,3 @@
-/***********************************
-Required vars
-************************************/
-
 variable "environment_tag" {
   type        = string
   description = "The environment name for tagging."
@@ -57,10 +53,6 @@ variable "cluster_node_vm_size" {
   description = "The size of the VM's being used for nodes."
 }
 
-
-/***********************************
-Optional vars
-************************************/
 variable "aks_version" {
   type        = string
   description = "The version of AKS to deploy."
@@ -191,4 +183,28 @@ variable "managed_identities" {
   type        = list(string)
   description = "A list of names for User Defined Managed Identities placed in the node resourse group. Defaults to null."
   default     = []
+}
+
+variable "max_pods" {
+  type        = number
+  description = "The max number of pods per host"
+  default     = 50
+}
+
+variable "service_cidr" {
+  type        = string
+  description = "The CIDR block used in the AKS service."
+  default     = "172.16.0.0/16"
+}
+
+variable "docker_bridge_cidr" {
+  type        = string
+  description = "The CIDR block used in the Docker network bridge."
+  default     = "172.17.0.0/16"
+}
+
+variable "dns_service_ip" {
+  type        = string
+  description = "The IP used for the cluster DNS service."
+  default     = "172.16.255.254"
 }

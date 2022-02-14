@@ -1,6 +1,7 @@
 .terraform
 .terraform*
 .terraform.lock*
+*.tfvars
 terraform.tfstate*
 Tests/go.*
 Tests/kubeconfig
