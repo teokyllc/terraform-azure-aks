@@ -28,7 +28,7 @@ variable "region" {
   description = "The Azure region to deploy to."
 }
 
-variable "resource_group" {
+variable "aks_resource_group" {
   type        = string
   description = "The Azure resource group the AKS cluster belongs to."
 }
