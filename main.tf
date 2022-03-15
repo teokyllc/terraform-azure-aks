@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "new_rg" {
-  name     = var.resource_group
+  name     = var.aks_resource_group
   location = var.region
 }
 
