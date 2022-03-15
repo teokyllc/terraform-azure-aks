@@ -15,7 +15,7 @@ This module will deploy an Azure Kubernetes cluster resource.  [See this page](h
 | aks_cluster_name | True | String | The name for the AKS cluster. |
 | dns_prefix | True | String | DNS prefix specified when creating the managed cluster. |
 | region | True | String | The Azure region to deploy to. |
-| resource_group | True | String | The Azure resource group the AKS cluster belongs to. |
+| aks_resource_group | True | String | The Azure resource group the AKS cluster belongs to. |
 | aks_vnet_name | True | String | The name of the vnet to deploy AKS onto. |
 | aks_subnet_name | True | String | The name of the subnet to deploy AKS onto. |
 | network_resource_group | True | String | The Azure resource group the AKS node pool NIC's belongs to. |
