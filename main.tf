@@ -1,40 +1,27 @@
-resource "azurerm_resource_group" "new_rg" {
-  name     = var.aks_resource_group
-  location = var.region
-}
-
-
 resource "azurerm_kubernetes_cluster" "k8s" {
   timeouts {
     read   = "60m"
     create = "60m"
     delete = "60m"
   }
-  name                            = var.aks_cluster_name
-  location                        = var.region
-  resource_group_name             = azurerm_resource_group.new_rg.name
-  kubernetes_version              = var.aks_version
-  dns_prefix                      = var.dns_prefix
-  local_account_disabled          = var.local_account_disabled
-  sku_tier                        = var.sku_tier
-  api_server_authorized_ip_ranges = var.allowed_ips_to_api
-  automatic_channel_upgrade       = var.automatic_channel_upgrade
-
+  name                             = var.aks_cluster_name
+  location                         = var.region
+  resource_group_name              = azurerm_resource_group.new_rg.name
+  kubernetes_version               = var.aks_version
+  dns_prefix                       = var.dns_prefix
+  local_account_disabled           = var.local_account_disabled
+  sku_tier                         = var.sku_tier
+  api_server_authorized_ip_ranges  = var.allowed_ips_to_api
+  automatic_channel_upgrade        = var.automatic_channel_upgrade
+  azure_policy_enabled             = var.azure_policy
+  http_application_routing_enabled = var.http_application_routing
+  role_based_access_control_enabled = var.k8s_rbac_enabled
 
   linux_profile {
     admin_username = var.node_admin_username
 
     ssh_key {
       key_data = var.node_admin_ssh_pub_key
-    }
-  }
-
-  addon_profile {
-    azure_policy {
-      enabled = var.azure_policy
-    }
-    http_application_routing {
-      enabled = var.http_application_routing
     }
   }
 
@@ -70,8 +57,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     }
   }
 
+
+
   role_based_access_control {
-    enabled = var.k8s_rbac_enabled
     dynamic "azure_active_directory" {
       for_each = var.azure_ad_rbac_enabled ? [1] : []
       content {
@@ -80,6 +68,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
       }
     }
   }
+  
   tags = {
     Environment = var.environment_tag
   }
