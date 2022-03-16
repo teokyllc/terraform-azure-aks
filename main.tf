@@ -61,8 +61,10 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 
   dynamic azure_active_directory_role_based_access_control {
     for_each = var.azure_ad_rbac_enabled ? [1] : []
+    content {
       managed                = true
       admin_group_object_ids = var.aad_admin_group
+    }
   }
 
   tags = {
