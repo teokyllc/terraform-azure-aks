@@ -6,7 +6,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
   name                             = var.aks_cluster_name
   location                         = var.region
-  resource_group_name              = azurerm_resource_group.new_rg.name
+  resource_group_name              = var.aks_resource_group
   kubernetes_version               = var.aks_version
   dns_prefix                       = var.dns_prefix
   local_account_disabled           = var.local_account_disabled
@@ -68,7 +68,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
       }
     }
   }
-  
+
   tags = {
     Environment = var.environment_tag
   }
