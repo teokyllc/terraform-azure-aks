@@ -36,7 +36,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   default_node_pool {
     name                = "nodepool1"
     node_count          = var.node_count
-    availability_zones  = var.node_availability_zones
+    zones               = var.node_availability_zones
     vm_size             = var.cluster_node_vm_size
     enable_auto_scaling = var.cluster_auto_scaling_enabled
     min_count           = var.cluster_auto_scaling_min_nodes
